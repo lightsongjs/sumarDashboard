@@ -31,7 +31,11 @@
       "Bash(ss:*)",
       "Bash(cat:*)",
       "Bash(git rm:*)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nClean up project: Remove unnecessary files and add .gitignore\n\nCleanup changes:\n- Removed dev/cache files (.coverage, .pytest_cache/, htmlcov/)\n- Removed duplicate files (app-IonutS.py, requirements-IonutS.txt, data/tickets.csv)\n- Removed JavaScript files (node_modules/, package.json, package-lock.json)\n- Removed documentation files (8 files: newTODO.md, TODOS.md, thoroughReport.md, TEST_RESULTS.md, prompt.md, support-dashboard.html, and Romanian notes)\n- Added .gitignore to exclude __pycache__, .venv, and other build artifacts\n\nConfiguration updates:\n- Updated .streamlit/config.toml with address binding\n- Updated .claude/settings.local.json with approved commands\n- Updated requirements.txt\n\nThis cleanup prepares the project for deployment and removes ~20 unnecessary files.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git commit -m \"$(cat <<''EOF''\nSecurity: Add .gitignore rules to exclude client data\n\n- Added *.csv to .gitignore to prevent committing client data\n- Removed tickets.csv from git tracking (file still exists locally)\n- Added data/ folder to .gitignore\n- This prevents accidental exposure of sensitive client information\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(gh repo create:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []
