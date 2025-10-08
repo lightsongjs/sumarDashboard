@@ -1,37 +1,37 @@
 # Core Framework
-streamlit==1.29.0
+streamlit>=1.40.0
 
 # Data Processing
-pandas==2.1.4
-numpy==1.26.2
+pandas>=2.2.0
+numpy>=1.26.0
 
 # Visualization
-plotly==5.18.0
-matplotlib==3.8.2
-seaborn==0.13.0
+plotly>=5.24.0
+matplotlib>=3.9.0
+seaborn>=0.13.0
 
 # Streamlit Extensions
-streamlit-extras==0.3.6
-streamlit-option-menu==0.3.6
-streamlit-aggrid==0.3.4.post3
+streamlit-extras>=0.4.0
+streamlit-option-menu>=0.4.0
+streamlit-aggrid>=0.3.5
 
 # Export & Reporting
-openpyxl==3.1.2
-xlsxwriter==3.1.9
-reportlab==4.0.7
-fpdf2==2.7.6
+openpyxl>=3.1.0
+xlsxwriter>=3.2.0
+reportlab>=4.2.0
+fpdf2>=2.8.0
 
 # Utilities
-python-dotenv==1.0.0
-python-dateutil==2.8.2
-chardet==5.2.0
+python-dotenv>=1.0.0
+python-dateutil>=2.9.0
+chardet>=5.2.0
 
 # NLP & Text Processing (for word cloud and insights)
-wordcloud==1.9.3
-nltk==3.8.1
+wordcloud>=1.9.3
+nltk>=3.9.0
 
 # Performance
-pyarrow==14.0.1
+pyarrow>=18.0.0
 
 # Testing
-pytest-playwright==0.4.4
+pytest-playwright>=0.6.0

@@ -16,7 +16,22 @@
       "Bash(timeout:*)",
       "Bash(powershell:*)",
       "Bash(git init:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nInitial commit: SmartBill Support Analytics Dashboard\n\nFeatures implemented:\n- 📊 PM Insights Dashboard with 10 comprehensive reports for product decisions\n- 🔬 Discovery page with progressive exploration (4 levels: platform → criteria → values → results)\n- 🌟 Visual Explorer with interactive Sunburst/Treemap/Icicle charts\n- 🔍 Explorer page with advanced mega-filtering (26+ properties)\n- 📊 Dashboard, Pain Points, Analytics, Team, Reports pages\n- 📈 Complete analytics: NPS, sentiment, platform health, SLA compliance\n- 🐛 Bug tracking, feature gaps, recurring issues analysis\n- 💼 Business impact and risk scoring\n- 🔌 Integration health monitoring (SPV, API, third-party)\n- ⏱️ Operational efficiency metrics\n- 🎯 User journey gap analysis\n- 📈 Executive summary with trends and KPIs\n- 🧪 Playwright E2E tests for all pages\n- 🛠️ Utility modules: data_processor, charts, filters, export, pm_analytics, pm_charts\n- 🎨 Dark theme, responsive design, emoji icons\n- 📦 Auto-load CSV, timezone handling fixes\n\nTech stack: Streamlit, Plotly, Pandas, Pytest, Playwright\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(python:*)",
+      "Bash(python3:*)",
+      "Bash(.venv/bin/python3:*)",
+      "Bash(uv run:*)",
+      "Bash(uv pip:*)",
+      "Bash(pkill:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nAdd Product Insights Dashboard: 4 new analytics pages\n\nImplemented comprehensive Product Insights section with 4 new dashboard pages:\n\nNew Pages:\n- ❤️ Health Check: Support health overview with ticket volume trends, resolution time KPIs, sentiment analysis, and urgency breakdown\n- 💡 Product Opportunity: Identifies friction areas with problem area analysis, root cause charts, feature mentions parser, and pain points table\n- 🔬 Deep Dive Explorer: Advanced filtering system with multi-dimensional filters, paginated data tables, and export capabilities\n- 💼 Business Impact: Quantifies business impact with gauge charts, recurring issues tracking, platform distribution, and critical issue prioritization\n\nFeatures:\n- Interactive Plotly charts (line, bar, pie, treemap, gauge)\n- Real-time filtering and data updates\n- CSV export functionality\n- Color-coded urgency/severity indicators\n- Responsive layouts with Streamlit\n- Parse semicolon-delimited features\n- Pagination for large datasets\n- Date range filtering\n\nTechnical:\n- Added chardet dependency for CSV encoding detection\n- Created test_pages_loading.py for page validation\n- All pages follow existing architecture patterns\n- Compatible with existing tickets.csv data structure\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git config:*)",
+      "Bash(streamlit run:*)",
+      "Bash(netstat:*)",
+      "Bash(ss:*)",
+      "Bash(cat:*)",
+      "Bash(git rm:*)",
+      "Bash(git reset:*)"
     ],
     "deny": [],
     "ask": []
