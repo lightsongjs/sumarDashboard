@@ -215,9 +215,9 @@ def main():
 
         st.markdown("---")
 
-        # Auto-redirect to Explorer
-        st.success("✅ Date încărcate cu succes! Redirectionare către Explorer...")
-        st.switch_page("pages/0_🔍_Explorer.py")
+        # Auto-redirect to Strategic Dashboard
+        st.success("✅ Date încărcate cu succes! Redirectionare către Strategic Dashboard...")
+        st.switch_page("pages/1_📊_Strategic_Dashboard.py")
 
     else:
         # No data loaded - show welcome screen
