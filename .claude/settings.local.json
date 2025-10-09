@@ -41,7 +41,8 @@
       "Read(//home/light/WSLprojects/sumarDashboard/utils/**)",
       "Read(//home/light/WSLprojects/sumarDashboard/pages/**)",
       "Read(//home/light/WSLprojects/sumarDashboard/**)",
-      "Bash(git mv:*)"
+      "Bash(git mv:*)",
+      "Read(//WSL.LOCALHOST/UBUNTU/home/light/WSLprojects/sumarDashboard/pages/**)"
     ],
     "deny": [],
     "ask": []

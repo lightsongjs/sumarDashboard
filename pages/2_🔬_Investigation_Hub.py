@@ -201,23 +201,6 @@ def main():
     # Apply filters
     df = apply_filters(df_original, st.session_state.investigation_filters)
 
-    # Filter summary
-    st.markdown("---")
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        st.metric("Total Tickets", f"{len(df_original):,}")
-
-    with col2:
-        st.metric("Filtered Tickets", f"{len(df):,}")
-
-    with col3:
-        if len(df_original) > 0:
-            pct = (len(df) / len(df_original)) * 100
-            st.metric("% of Total", f"{pct:.1f}%")
-
-    st.markdown("---")
-
     # Tabbed interface
     tab1, tab2, tab3, tab4, tab5 = st.tabs([
         "📊 Data Explorer",
