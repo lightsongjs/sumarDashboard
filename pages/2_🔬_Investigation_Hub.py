@@ -212,12 +212,11 @@ def main():
     df = apply_filters(df_original, st.session_state.investigation_filters)
 
     # Tabbed interface
-    tab1, tab2, tab3, tab4, tab5 = st.tabs([
+    tab1, tab2, tab3, tab4 = st.tabs([
         "📊 Data Explorer",
         "🌟 Visualizer",
         "🔥 Pain Point Analysis",
-        "💡 Opportunity Finder",
-        "📈 Statistical Analysis"
+        "💡 Opportunity Finder"
     ])
 
     with tab1:
@@ -355,76 +354,6 @@ def main():
                     st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("Required columns not available")
-
-    with tab5:
-        st.markdown("### 📈 Statistical Analysis")
-
-        if 'created_at' in df.columns:
-            st.markdown("#### Ticket Volume Over Time")
-
-            # Time series with moving average
-            daily_counts = df.groupby(df['created_at'].dt.date).size().reset_index(name='count')
-            daily_counts.columns = ['date', 'count']
-            daily_counts['date'] = pd.to_datetime(daily_counts['date'])
-
-            # Calculate 7-day moving average
-            daily_counts['ma_7'] = daily_counts['count'].rolling(window=7, min_periods=1).mean()
-
-            fig = go.Figure()
-
-            fig.add_trace(go.Scatter(
-                x=daily_counts['date'],
-                y=daily_counts['count'],
-                mode='lines',
-                name='Daily Count',
-                line=dict(color=COLORS['info'], width=1),
-                opacity=0.5
-            ))
-
-            fig.add_trace(go.Scatter(
-                x=daily_counts['date'],
-                y=daily_counts['ma_7'],
-                mode='lines',
-                name='7-Day Moving Average',
-                line=dict(color=COLORS['primary'], width=3)
-            ))
-
-            fig.update_layout(
-                title='Ticket Volume with 7-Day Moving Average',
-                xaxis_title='Date',
-                yaxis_title='Ticket Count',
-                hovermode='x unified',
-                **DARK_TEMPLATE['layout']
-            )
-
-            fig.update_xaxes(**AXIS_STYLE)
-            fig.update_yaxes(**AXIS_STYLE)
-
-            st.plotly_chart(fig, use_container_width=True)
-
-        # Distribution analysis
-        if 'urgency' in df.columns and 'platform' in df.columns:
-            st.markdown("#### Distribution: Urgency by Platform")
-
-            pivot_data = pd.crosstab(df['platform'], df['urgency'])
-
-            fig = go.Figure()
-
-            for urgency in pivot_data.columns:
-                fig.add_trace(go.Bar(
-                    name=urgency,
-                    x=pivot_data.index,
-                    y=pivot_data[urgency]
-                ))
-
-            fig.update_layout(
-                barmode='stack',
-                xaxis_title='Platform',
-                yaxis_title='Count',
-                **DARK_TEMPLATE['layout']
-            )
-
-            st.plotly_chart(fig, use_container_width=True)
 
 
 if __name__ == "__main__":
