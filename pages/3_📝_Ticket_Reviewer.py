@@ -17,7 +17,7 @@ st.set_page_config(
     page_title="Ticket Reviewer",
     page_icon="📝",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="expanded"
 )
 
 
@@ -63,12 +63,11 @@ def start_flask_server():
 def main():
     """Main application function"""
 
-    # Hide Streamlit header and footer for a cleaner iframe experience
+    # Hide Streamlit footer and main menu for cleaner UI (keep header for navigation)
     hide_streamlit_style = """
         <style>
         #MainMenu {visibility: hidden;}
         footer {visibility: hidden;}
-        header {visibility: hidden;}
         </style>
     """
     st.markdown(hide_streamlit_style, unsafe_allow_html=True)
