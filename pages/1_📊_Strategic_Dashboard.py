@@ -54,27 +54,140 @@ def create_volume_trend_chart(df, time_grouping='D'):
     return fig
 
 
+def create_volume_bar_chart(df, time_grouping='D'):
+    """Create ticket volume bar chart"""
+    freq_map = {'D': 'D', 'W': 'W-MON', 'M': 'MS'}
+    freq_label = {'D': 'Day', 'W': 'Week', 'M': 'Month'}
+
+    df_grouped = df.groupby(pd.Grouper(key='created_at', freq=freq_map[time_grouping])).size().reset_index(name='count')
+
+    # Filter out days with zero tickets
+    df_grouped = df_grouped[df_grouped['count'] > 0]
+
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        x=df_grouped['created_at'],
+        y=df_grouped['count'],
+        name='Tickets',
+        marker=dict(color=COLORS['primary']),
+        hovertemplate='<b>%{x|%Y-%m-%d}</b><br>Tickets: %{y}<extra></extra>'
+    ))
+
+    fig.update_layout(
+        title=f'Ticket Volume (Bar View - by {freq_label[time_grouping]})',
+        xaxis_title='Date',
+        yaxis_title='Number of Tickets',
+        hovermode='x unified',
+        **DARK_TEMPLATE['layout']
+    )
+
+    fig.update_xaxes(**AXIS_STYLE)
+    fig.update_yaxes(**AXIS_STYLE)
+
+    return fig
+
+
+def calculate_business_hours(start_time, end_time):
+    """
+    Calculate business hours between two timestamps.
+    Business hours: Monday-Friday, 9:00-18:00
+    """
+    if pd.isna(start_time) or pd.isna(end_time):
+        return 0
+
+    if end_time <= start_time:
+        return 0
+
+    business_hours = 0
+    current = start_time
+
+    # Define business hours
+    work_start_hour = 9
+    work_end_hour = 18
+    hours_per_day = work_end_hour - work_start_hour  # 9 hours
+
+    while current < end_time:
+        # Skip weekends (Saturday=5, Sunday=6)
+        if current.weekday() < 5:  # Monday=0 to Friday=4
+            # Calculate start of work for this day
+            day_work_start = current.replace(hour=work_start_hour, minute=0, second=0, microsecond=0)
+            day_work_end = current.replace(hour=work_end_hour, minute=0, second=0, microsecond=0)
+
+            # Adjust if current time is before work starts
+            if current < day_work_start:
+                current = day_work_start
+
+            # Adjust if current time is after work ends
+            if current >= day_work_end:
+                current = current.replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)
+                continue
+
+            # Calculate hours for this work day
+            if end_time <= day_work_end:
+                # End time is within this work day
+                business_hours += (end_time - current).total_seconds() / 3600
+                break
+            else:
+                # End time is beyond this work day
+                business_hours += (day_work_end - current).total_seconds() / 3600
+                current = day_work_end
+
+        # Move to next day
+        current = current.replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)
+
+    return business_hours
+
+
 def calculate_avg_resolution_time(df):
-    """Calculate average time to resolution"""
+    """Calculate average time to resolution using business hours only"""
     closed_tickets = df[df['closed_at'].notna()].copy()
 
     if len(closed_tickets) == 0:
-        return None, None, 0
+        return None, None, 0, None, 0
 
-    closed_tickets['resolution_hours'] = (closed_tickets['closed_at'] - closed_tickets['created_at']).dt.total_seconds() / 3600
+    # Calculate business hours for each ticket
+    closed_tickets['resolution_hours'] = closed_tickets.apply(
+        lambda row: calculate_business_hours(row['created_at'], row['closed_at']),
+        axis=1
+    )
+
+    # Exclude outliers (> 30 days = 270 business hours)
+    max_hours = 30 * 9  # 30 days * 9 hours/day = 270 hours
+    tickets_before_filter = len(closed_tickets)
+    closed_tickets = closed_tickets[closed_tickets['resolution_hours'] <= max_hours]
+    tickets_excluded = tickets_before_filter - len(closed_tickets)
+
+    if len(closed_tickets) == 0:
+        return None, None, 0, None, tickets_excluded
+
     avg_hours = closed_tickets['resolution_hours'].mean()
+    median_hours = closed_tickets['resolution_hours'].median()
 
+    # Format average time
     days = int(avg_hours // 24)
     hours = int(avg_hours % 24)
     minutes = int((avg_hours * 60) % 60)
 
     if days > 0:
-        readable = f"{days}d {hours}h {minutes}m"
+        avg_readable = f"{days}d {hours}h {minutes}m"
     elif hours > 0:
-        readable = f"{hours}h {minutes}m"
+        avg_readable = f"{hours}h {minutes}m"
     else:
-        readable = f"{minutes}m"
+        avg_readable = f"{minutes}m"
 
+    # Format median time
+    med_days = int(median_hours // 24)
+    med_hours = int(median_hours % 24)
+    med_minutes = int((median_hours * 60) % 60)
+
+    if med_days > 0:
+        median_readable = f"{med_days}d {med_hours}h {med_minutes}m"
+    elif med_hours > 0:
+        median_readable = f"{med_hours}h {med_minutes}m"
+    else:
+        median_readable = f"{med_minutes}m"
+
+    # Calculate trend
     mid_date = closed_tickets['created_at'].min() + (closed_tickets['created_at'].max() - closed_tickets['created_at'].min()) / 2
     previous_period = closed_tickets[closed_tickets['created_at'] < mid_date]
     current_period = closed_tickets[closed_tickets['created_at'] >= mid_date]
@@ -86,7 +199,7 @@ def calculate_avg_resolution_time(df):
     else:
         change_pct = 0
 
-    return readable, change_pct, len(closed_tickets)
+    return avg_readable, median_readable, change_pct, len(closed_tickets), tickets_excluded
 
 
 def create_sentiment_chart(df):
@@ -335,31 +448,50 @@ def main():
             else:
                 st.warning("Column 'created_at' not found")
 
+        # Bar chart view
+        if 'created_at' in df.columns:
+            fig_bar = create_volume_bar_chart(df, time_grouping)
+            st.plotly_chart(fig_bar, use_container_width=True)
+
         st.markdown("---")
 
         # Component 2: Average Time to Resolution
         st.markdown("#### ⏱️ Average Time to Resolution")
 
         if 'created_at' in df.columns and 'closed_at' in df.columns:
-            readable_time, change_pct, closed_count = calculate_avg_resolution_time(df)
+            avg_time, median_time, change_pct, closed_count, excluded_count = calculate_avg_resolution_time(df)
 
-            if readable_time:
-                col1, col2, col3 = st.columns(3)
+            if avg_time:
+                col1, col2, col3, col4 = st.columns(4)
 
                 with col1:
                     st.metric(
-                        "Average Resolution Time",
-                        readable_time,
-                        delta=f"{change_pct:+.1f}% from previous period" if change_pct != 0 else None,
-                        delta_color="inverse"
+                        "⏱️ Median Resolution Time",
+                        median_time,
+                        help="Median time to resolution (business hours only: Mon-Fri, 9-18)"
                     )
 
                 with col2:
-                    st.metric("Closed Tickets", f"{closed_count:,}")
+                    st.metric(
+                        "📊 Average Resolution Time",
+                        avg_time,
+                        delta=f"{change_pct:+.1f}% from previous period" if change_pct != 0 else None,
+                        delta_color="inverse",
+                        help="Average time to resolution (business hours only)"
+                    )
 
                 with col3:
+                    st.metric("✅ Closed Tickets", f"{closed_count:,}")
+
+                with col4:
                     open_count = len(df[df['closed_at'].isna()])
-                    st.metric("Open Tickets", f"{open_count:,}")
+                    st.metric("🔓 Open Tickets", f"{open_count:,}")
+
+                # Show info about filters
+                if excluded_count > 0:
+                    st.info(f"ℹ️ **Note:** {excluded_count} tickets excluded (resolution time > 30 days). Business hours: Mon-Fri, 9:00-18:00 only.")
+                else:
+                    st.info(f"ℹ️ **Note:** Resolution time calculated using business hours only (Mon-Fri, 9:00-18:00).")
             else:
                 st.info("No closed tickets in the selected period")
         else:

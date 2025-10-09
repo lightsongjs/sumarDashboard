@@ -98,29 +98,6 @@ def create_sunburst_chart(df):
     return fig
 
 
-def create_treemap_chart(df):
-    """Create treemap visualization"""
-    if 'area' not in df.columns or 'problem_type' not in df.columns:
-        return None
-
-    hierarchy_df = df.groupby(['area', 'problem_type']).size().reset_index(name='count')
-
-    fig = px.treemap(
-        hierarchy_df,
-        path=['area', 'problem_type'],
-        values='count',
-        color='count',
-        color_continuous_scale='Reds'
-    )
-
-    fig.update_layout(
-        title='Problem Distribution: Area → Type',
-        **DARK_TEMPLATE['layout']
-    )
-
-    return fig
-
-
 # ========================================
 # Main Function
 # ========================================
@@ -279,25 +256,11 @@ def main():
         st.markdown("### 🌟 Visual Explorer")
         st.markdown("Interactive hierarchical visualizations")
 
-        viz_type = st.radio(
-            "Select Visualization",
-            ["Sunburst", "Treemap"],
-            horizontal=True,
-            key="viz_type"
-        )
-
-        if viz_type == "Sunburst":
-            fig = create_sunburst_chart(df)
-            if fig:
-                st.plotly_chart(fig, use_container_width=True)
-            else:
-                st.warning("Required columns not available for Sunburst chart")
+        fig = create_sunburst_chart(df)
+        if fig:
+            st.plotly_chart(fig, use_container_width=True)
         else:
-            fig = create_treemap_chart(df)
-            if fig:
-                st.plotly_chart(fig, use_container_width=True)
-            else:
-                st.warning("Required columns not available for Treemap chart")
+            st.warning("Required columns not available for Sunburst chart")
 
     with tab3:
         st.markdown("### 🔥 Pain Point Analysis")
