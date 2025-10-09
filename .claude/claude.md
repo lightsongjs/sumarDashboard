@@ -10,13 +10,11 @@ This is a comprehensive Streamlit-based analytics dashboard for SmartBill suppor
 
 ### v3.0 Consolidation (Latest)
 
-The dashboard was refactored from 14 pages to 5 focused pages:
+The dashboard was refactored from 14 pages to 3 focused pages:
 
 1. **Strategic Dashboard** - Consolidated KPIs, visualizations, and metrics
 2. **Investigation Hub** - Pain points analysis and deep-dive exploration
-3. **Team Performance** - Agent performance metrics and leaderboard
-4. **Export Reports** - Multi-format export (CSV, Excel, PDF, PowerPoint)
-5. **Ticket Reviewer** - Individual ticket review with Flask backend
+3. **Ticket Reviewer** - Individual ticket review with Flask backend (auto-starts)
 
 ---
 
@@ -72,9 +70,7 @@ sumarDashboard/
 ├── pages/                          # Streamlit pages (v3.0)
 │   ├── 1_📊_Strategic_Dashboard.py
 │   ├── 2_🔬_Investigation_Hub.py
-│   ├── 3_👥_Team_Performance.py
-│   ├── 4_📤_Export_Reports.py
-│   └── 5_📝_Ticket_Reviewer.py
+│   └── 3_📝_Ticket_Reviewer.py
 ├── ticket_commenter_server.py      # Flask backend for ticket reviewer
 └── ticket_commenter_static/        # Ticket reviewer frontend
     ├── app.js                      # JavaScript logic
@@ -166,18 +162,7 @@ sumarDashboard/
 - **Word Analysis:** Frequency analysis of pain points
 - **Export:** Dedicated export for investigation results
 
-### 3. Team Performance
-- **Leaderboard:** Top performing agents
-- **Metrics:** Resolution time, ticket count, satisfaction
-- **Comparison:** Agent-to-agent comparison
-- **Timeline:** Activity over time
-
-### 4. Export Reports
-- **Formats:** CSV, Excel (single/multiple sheets), PDF, PowerPoint
-- **Templates:** Quick export for blockers, negative sentiment, etc.
-- **Customization:** Select columns, date ranges, filters
-
-### 5. Ticket Reviewer (NEW in v3.0)
+### 3. Ticket Reviewer
 - **Navigation:** Keyboard shortcuts (Ctrl + ←/→), Previous/Next buttons, Jump to ticket #
 - **Filters:** Mailbox, Tip, Area, Sentiment, Urgency, Platform, Integration, Recurrent, Agent Needed, Ticket ID
 - **Comments:** Auto-save textarea (500ms debounce), persists to CSV
@@ -189,29 +174,23 @@ sumarDashboard/
 
 ## Running the Application
 
-### Dashboard
-
 ```bash
 # Install dependencies
 uv pip install -r requirements.txt
 
-# Run Streamlit dashboard
+# Run Streamlit dashboard (Flask auto-starts in background)
 streamlit run app.py
 
 # Or with specific port
 streamlit run app.py --server.port 8502
 ```
 
-### Ticket Reviewer
+**Note:** The Flask backend for Ticket Reviewer starts automatically when you run the Streamlit app. No need to start a separate server!
 
-```bash
-# Start Flask backend (in separate terminal)
-cd sumarDashboard
-python ticket_commenter_server.py
-
-# Access at http://localhost:5000
-# Or click "Ticket Reviewer" in dashboard sidebar
-```
+### Accessing Pages
+- Strategic Dashboard: Main page at http://localhost:8501
+- Investigation Hub: Available in sidebar
+- Ticket Reviewer: Opens in new tab at http://localhost:5000
 
 ---
 
@@ -311,6 +290,8 @@ Agent response here...
 - `master` - Production-ready code
 - `feature/v3-consolidation` - v3.0 refactoring (merged)
 - `embedding_ticket_commenter` - Ticket reviewer integration (merged)
+- `feature/auto-start-flask` - Flask auto-start implementation (merged)
+- `feature/remove-team-export-pages` - v3.1 simplification (current)
 
 ### Excluded from Git (.gitignore)
 - `tickets.csv` - Client data
@@ -354,7 +335,7 @@ Agent response here...
 ### Adding a New Export Format
 
 1. Add export function in `utils/export.py`
-2. Add button in `4_Export_Reports.py`
+2. Add export button in any page (e.g., Strategic Dashboard or Investigation Hub)
 3. Handle file download with `st.download_button()`
 
 ---
@@ -420,7 +401,12 @@ app.run(debug=True, port=5001)  # Change port
 
 ## Version History
 
-### v3.0 (Current)
+### v3.1 (Current)
+- Simplified to 3 core pages (removed Team Performance and Export Reports)
+- Flask server auto-starts with Streamlit (single command)
+- Streamlined focus on ticket analysis and review
+
+### v3.0
 - Consolidated 14 pages → 5 pages
 - Added Ticket Reviewer with Flask backend
 - Improved performance with better caching
