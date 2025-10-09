@@ -36,7 +36,12 @@
       "Bash(git commit -m \"$(cat <<''EOF''\nSecurity: Add .gitignore rules to exclude client data\n\n- Added *.csv to .gitignore to prevent committing client data\n- Removed tickets.csv from git tracking (file still exists locally)\n- Added data/ folder to .gitignore\n- This prevents accidental exposure of sensitive client information\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(gh repo create:*)",
       "Bash(git commit:*)",
-      "Bash(git pull:*)"
+      "Bash(git pull:*)",
+      "Bash(git push:*)",
+      "Read(//home/light/WSLprojects/sumarDashboard/utils/**)",
+      "Read(//home/light/WSLprojects/sumarDashboard/pages/**)",
+      "Read(//home/light/WSLprojects/sumarDashboard/**)",
+      "Bash(git mv:*)"
     ],
     "deny": [],
     "ask": []
