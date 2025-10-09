@@ -106,12 +106,6 @@ Object.keys(dropdownFilters).forEach(filterKey => {
     filter.toggleBtn.addEventListener('click', (e) => toggleDropdown(e, filterKey));
     filter.selectAllBtn.addEventListener('click', () => selectAll(filterKey));
     filter.deselectAllBtn.addEventListener('click', () => deselectAll(filterKey));
-
-    // Add search input event listener
-    const searchInput = document.getElementById(`${filterKey}Search`);
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => filterDropdownCheckboxes(filterKey, e.target.value));
-    }
 });
 
 recurrentFilter.addEventListener('change', applyFilters);
@@ -258,45 +252,20 @@ function toggleDropdown(e, filterKey) {
     dropdownFilters[filterKey].dropdown.classList.toggle('show');
 }
 
-function filterDropdownCheckboxes(filterKey, searchQuery) {
-    const filter = dropdownFilters[filterKey];
-    const checkboxItems = filter.checkboxesContainer.querySelectorAll('.checkbox-item');
-    const query = searchQuery.toLowerCase().trim();
-
-    checkboxItems.forEach(item => {
-        const label = item.querySelector('label');
-        const text = label.textContent.toLowerCase();
-
-        if (query === '' || text.includes(query)) {
-            item.style.display = 'flex';
-        } else {
-            item.style.display = 'none';
-        }
-    });
-}
-
 function selectAll(filterKey) {
     const filter = dropdownFilters[filterKey];
-    const checkboxItems = filter.checkboxesContainer.querySelectorAll('.checkbox-item');
-    checkboxItems.forEach(item => {
-        // Only select visible checkboxes
-        if (item.style.display !== 'none') {
-            const checkbox = item.querySelector('input[type="checkbox"]');
-            checkbox.checked = true;
-        }
+    const checkboxes = filter.checkboxesContainer.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = true;
     });
     updateSelectedValues(filterKey);
 }
 
 function deselectAll(filterKey) {
     const filter = dropdownFilters[filterKey];
-    const checkboxItems = filter.checkboxesContainer.querySelectorAll('.checkbox-item');
-    checkboxItems.forEach(item => {
-        // Only deselect visible checkboxes
-        if (item.style.display !== 'none') {
-            const checkbox = item.querySelector('input[type="checkbox"]');
-            checkbox.checked = false;
-        }
+    const checkboxes = filter.checkboxesContainer.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = false;
     });
     updateSelectedValues(filterKey);
 }
