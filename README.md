@@ -21,7 +21,7 @@ uv venv
 
 # Instalează dependențe
 uv pip install -r requirements.txt
-uv pip install --upgrade streamlit protobuf
+ uv pip install -r requirements.txt --force-reinstall
 ```
 
 ### 2. Rulare
