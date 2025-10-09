@@ -212,21 +212,16 @@ def main():
 
     with tab1:
         st.markdown("### 📊 Data Explorer")
-        st.markdown("Explore filtered ticket data with pagination")
+        st.markdown("Explore all filtered ticket data")
 
-        # Pagination
-        page_size = st.selectbox("Rows per page", [10, 25, 50, 100], index=1, key="data_explorer_page_size")
-        total_pages = (len(df) // page_size) + (1 if len(df) % page_size > 0 else 0)
-        page_num = st.number_input("Page", min_value=1, max_value=max(total_pages, 1), value=1, key="data_explorer_page")
+        # Show total records
+        st.info(f"📊 Afișare {len(df):,} înregistrări")
 
-        start_idx = (page_num - 1) * page_size
-        end_idx = start_idx + page_size
-
-        # Display data
+        # Display all data
         st.dataframe(
-            df.iloc[start_idx:end_idx],
+            df,
             use_container_width=True,
-            height=600
+            height=700
         )
 
         # Export
