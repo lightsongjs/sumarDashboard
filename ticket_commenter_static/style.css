@@ -342,6 +342,13 @@ body {
     color: #333;
 }
 
+.ticket-id-subtle {
+    font-size: 10px;
+    color: #999;
+    font-weight: 400;
+    margin-top: 2px;
+}
+
 .ticket-btn {
     display: inline-block;
     padding: 6px 12px;

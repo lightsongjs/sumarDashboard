@@ -471,6 +471,7 @@ function displayTicket(index) {
 
     ticketCounter.textContent = `Ticket ${index + 1} of ${filteredTickets.length}`;
     subject.textContent = ticket.subject || '-';
+    document.getElementById('ticketId').textContent = ticket.ticket_id ? `#${ticket.ticket_id}` : '#-';
     headerSummary.textContent = ticket.summary || '-';
     ticketUrl.href = ticket.ticket_url || '#';
 
