@@ -1,0 +1,23 @@
+{
+  "visible_columns": [
+    "subject",
+    "summary",
+    "ticket_url",
+    "conversation",
+    "area",
+    "sentiment",
+    "apreciere_parere_support",
+    "urgency",
+    "is_recurrent",
+    "agent_intervention_needed",
+    "user_goal",
+    "pain_point",
+    "problem_type",
+    "affects_business_flow",
+    "integration",
+    "mentioned_features",
+    "specific_error_messages",
+    "classification_index",
+    "total_classifications"
+  ]
+}
