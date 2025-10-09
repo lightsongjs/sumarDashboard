@@ -8,6 +8,9 @@ import pandas as pd
 from datetime import datetime
 import sys
 from pathlib import Path
+import subprocess
+import requests
+import time
 
 # Add utils to path
 sys.path.append(str(Path(__file__).parent))
@@ -24,6 +27,51 @@ st.set_page_config(
 )
 
 
+def check_flask_server(port=5000, timeout=1):
+    """Check if Flask server is running"""
+    try:
+        response = requests.get(f"http://localhost:{port}/api/tickets", timeout=timeout)
+        return response.status_code == 200
+    except:
+        return False
+
+
+def start_flask_server():
+    """Start the Flask server in the background"""
+    try:
+        # Get the path to the Flask server
+        flask_server_path = Path(__file__).parent / "ticket_commenter_server.py"
+
+        if not flask_server_path.exists():
+            return False
+
+        # Start the Flask server in the background
+        if sys.platform == "win32":
+            # Windows - use CREATE_NO_WINDOW to hide console
+            subprocess.Popen(
+                [sys.executable, str(flask_server_path)],
+                creationflags=subprocess.CREATE_NO_WINDOW,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL
+            )
+        else:
+            # Unix/Linux/Mac
+            subprocess.Popen(
+                [sys.executable, str(flask_server_path)],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL
+            )
+
+        # Wait a bit for server to start
+        time.sleep(2)
+
+        # Verify it started
+        return check_flask_server(timeout=3)
+
+    except Exception as e:
+        return False
+
+
 def initialize_session_state():
     """Initialize session state variables"""
     if 'data_loaded' not in st.session_state:
@@ -34,6 +82,9 @@ def initialize_session_state():
 
     if 'csv_file_path' not in st.session_state:
         st.session_state.csv_file_path = None
+
+    if 'flask_started' not in st.session_state:
+        st.session_state.flask_started = False
 
 
 def load_data_from_file(uploaded_file):
@@ -77,6 +128,14 @@ def main():
     """Main application function"""
 
     initialize_session_state()
+
+    # Auto-start Flask server for Ticket Reviewer (only once)
+    if not st.session_state.flask_started:
+        if not check_flask_server():
+            # Try to start Flask server
+            start_flask_server()
+        # Mark as attempted (don't retry every rerun)
+        st.session_state.flask_started = True
 
     # Check if default CSV exists
     default_csv_path = Path(__file__).parent / "tickets.csv"

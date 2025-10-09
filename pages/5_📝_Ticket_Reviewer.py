@@ -9,6 +9,7 @@ import requests
 import subprocess
 import sys
 import os
+import time
 from pathlib import Path
 
 # Page configuration
@@ -77,27 +78,28 @@ def main():
 
     if not server_running:
         st.title("📝 Ticket Reviewer")
-        st.warning("⚠️ The ticket reviewer interface needs the Flask server to be running.")
+        st.warning("⚠️ The Flask server is not responding.")
 
-        st.markdown("### To start the Flask server:")
+        st.markdown("### The Flask server should have started automatically.")
+        st.markdown("If you're seeing this message, the auto-start may have failed.")
 
-        col1, col2 = st.columns([3, 1])
+        col1, col2 = st.columns([2, 1])
 
         with col1:
-            st.code("cd sumarDashboard\npython ticket_commenter_server.py", language="bash")
+            st.markdown("**Manual start command:**")
+            st.code("python ticket_commenter_server.py", language="bash")
 
         with col2:
-            if st.button("🚀 Auto-start Server", use_container_width=True):
+            if st.button("🚀 Try Auto-start Again", use_container_width=True):
                 with st.spinner("Starting Flask server..."):
                     if start_flask_server():
-                        st.success("✅ Server starting... Please refresh this page in a few seconds.")
-                        st.balloons()
+                        st.success("✅ Server started! Refreshing in 3 seconds...")
+                        time.sleep(3)
+                        st.rerun()
                     else:
                         st.error("❌ Failed to start server. Please start it manually.")
 
         st.markdown("---")
-
-        st.info("💡 Once the server is running, refresh this page to see the ticket reviewer interface.")
 
         # Show a refresh button
         if st.button("🔄 Refresh Page", use_container_width=False):

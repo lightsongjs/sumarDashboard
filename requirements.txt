@@ -26,6 +26,10 @@ python-dotenv>=1.0.0
 python-dateutil>=2.9.0
 chardet>=5.2.0
 
+# Flask Backend (for Ticket Reviewer)
+Flask>=3.1.0
+Flask-CORS>=5.0.0
+
 # NLP & Text Processing (for word cloud and insights)
 wordcloud>=1.9.3
 nltk>=3.9.0
