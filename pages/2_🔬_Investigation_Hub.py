@@ -10,6 +10,7 @@ import plotly.express as px
 from datetime import datetime, timedelta
 import sys
 from pathlib import Path
+import json
 
 sys.path.append(str(Path(__file__).parent.parent))
 
@@ -17,6 +18,17 @@ from utils.charts import COLORS, DARK_TEMPLATE, AXIS_STYLE
 from utils.data_processor import auto_load_default_csv
 
 st.set_page_config(page_title="Investigation Hub", page_icon="🔬", layout="wide")
+
+# Default column order for Data Explorer
+DEFAULT_COLUMNS = [
+    'subject', 'platform', 'tip', 'summary', 'ticket_url',
+    'conversation', 'area', 'sentiment', 'apreciere_parere_support',
+    'urgency', 'is_recurrent', 'agent_intervention_needed',
+    'user_goal', 'pain_point', 'problem_type', 'affects_business_flow',
+    'integration', 'mentioned_features', 'specific_error_messages',
+    'classification_index', 'total_classifications'
+]
+PREFERENCES_FILE = '.streamlit/column_preferences.json'
 
 
 # ========================================
@@ -69,6 +81,25 @@ def apply_filters(df, filters):
         filtered_df = filtered_df[filtered_df['affects_business_flow'] == filters['affects_business']]
 
     return filtered_df
+
+
+def load_column_preferences():
+    """Load column preferences from file"""
+    try:
+        with open(PREFERENCES_FILE, 'r', encoding='utf-8') as f:
+            prefs = json.load(f)
+            return prefs.get('visible_columns', DEFAULT_COLUMNS)
+    except:
+        return DEFAULT_COLUMNS
+
+
+def save_column_preferences(visible_columns):
+    """Save column preferences to file"""
+    try:
+        with open(PREFERENCES_FILE, 'w', encoding='utf-8') as f:
+            json.dump({'visible_columns': visible_columns}, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        st.warning(f"Nu s-au putut salva preferințele: {e}")
 
 
 # ========================================
@@ -214,17 +245,68 @@ def main():
         st.markdown("### 📊 Data Explorer")
         st.markdown("Explore all filtered ticket data")
 
-        # Show total records
-        st.info(f"📊 Afișare {len(df):,} înregistrări")
+        # Load saved column preferences
+        saved_columns = load_column_preferences()
 
-        # Display all data
-        st.dataframe(
-            df,
-            use_container_width=True,
-            height=700
+        # Filter available columns (only show columns that exist in the dataframe)
+        available_columns = [col for col in DEFAULT_COLUMNS if col in df.columns]
+
+        # Initialize selected columns (intersection of saved prefs and available columns)
+        default_selected = [col for col in saved_columns if col in available_columns]
+        if not default_selected:
+            default_selected = available_columns
+
+        # Column selector
+        selected_columns = st.multiselect(
+            "🔍 Selectează coloanele de afișat:",
+            options=available_columns,
+            default=default_selected,
+            key="data_explorer_columns"
         )
 
+        # Save preferences when changed
+        if selected_columns != saved_columns:
+            save_column_preferences(selected_columns)
+
+        # Show total records
+        st.info(f"📊 Afișare {len(df):,} înregistrări | {len(selected_columns)} coloane selectate")
+
+        # Prepare dataframe with selected columns in the correct order
+        if selected_columns:
+            # Reorder columns according to DEFAULT_COLUMNS order
+            ordered_columns = [col for col in DEFAULT_COLUMNS if col in selected_columns]
+            df_display = df[ordered_columns]
+
+            # Configure special columns
+            column_config = {}
+
+            if 'ticket_url' in ordered_columns:
+                column_config['ticket_url'] = st.column_config.LinkColumn(
+                    "Ticket URL",
+                    display_text="🔗 View"
+                )
+
+            if 'is_recurrent' in ordered_columns:
+                column_config['is_recurrent'] = st.column_config.CheckboxColumn("Recurrent")
+
+            if 'agent_intervention_needed' in ordered_columns:
+                column_config['agent_intervention_needed'] = st.column_config.CheckboxColumn("Agent Needed")
+
+            if 'affects_business_flow' in ordered_columns:
+                column_config['affects_business_flow'] = st.column_config.CheckboxColumn("Business Impact")
+
+            # Display dataframe
+            st.dataframe(
+                df_display,
+                use_container_width=True,
+                height=700,
+                column_config=column_config
+            )
+        else:
+            st.warning("⚠️ Te rugăm să selectezi cel puțin o coloană pentru afișare.")
+
         # Export
+        st.markdown("---")
         csv = df.to_csv(index=False)
         st.download_button(
             "📥 Export Filtered Data (CSV)",
