@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Commenter - SmartBill</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='red'/></svg>">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-row">
+                <div class="filter-group">
+                    <label>Mailbox:</label>
+                    <div class="dropdown-container">
+                        <button type="button" class="dropdown-toggle" id="mailboxDropdownToggle">
+                            <span id="mailboxSelectedText">All</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </button>
+                        <div class="dropdown-menu" id="mailboxDropdown">
+                            <div class="dropdown-header">
+                                <button type="button" class="select-all-btn" id="mailboxSelectAll">Select All</button>
+                                <button type="button" class="deselect-all-btn" id="mailboxDeselectAll">Deselect All</button>
+                            </div>
+                            <div class="dropdown-checkboxes" id="mailboxCheckboxes">
+                                <!-- Checkboxes will be populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Tip:</label>
+                    <div class="dropdown-container">
+                        <button type="button" class="dropdown-toggle" id="tipDropdownToggle">
+                            <span id="tipSelectedText">All</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </button>
+                        <div class="dropdown-menu" id="tipDropdown">
+                            <div class="dropdown-header">
+                                <button type="button" class="select-all-btn" id="tipSelectAll">Select All</button>
+                                <button type="button" class="deselect-all-btn" id="tipDeselectAll">Deselect All</button>
+                            </div>
+                            <div class="dropdown-checkboxes" id="tipCheckboxes"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Area:</label>
+                    <div class="dropdown-container">
+                        <button type="button" class="dropdown-toggle" id="areaDropdownToggle">
+                            <span id="areaSelectedText">All</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </button>
+                        <div class="dropdown-menu" id="areaDropdown">
+                            <div class="dropdown-header">
+                                <button type="button" class="select-all-btn" id="areaSelectAll">Select All</button>
+                                <button type="button" class="deselect-all-btn" id="areaDeselectAll">Deselect All</button>
+                            </div>
+                            <div class="dropdown-checkboxes" id="areaCheckboxes"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Sentiment:</label>
+                    <div class="dropdown-container">
+                        <button type="button" class="dropdown-toggle" id="sentimentDropdownToggle">
+                            <span id="sentimentSelectedText">All</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </button>
+                        <div class="dropdown-menu" id="sentimentDropdown">
+                            <div class="dropdown-header">
+                                <button type="button" class="select-all-btn" id="sentimentSelectAll">Select All</button>
+                                <button type="button" class="deselect-all-btn" id="sentimentDeselectAll">Deselect All</button>
+                            </div>
+                            <div class="dropdown-checkboxes" id="sentimentCheckboxes"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Urgency:</label>
+                    <div class="dropdown-container">
+                        <button type="button" class="dropdown-toggle" id="urgencyDropdownToggle">
+                            <span id="urgencySelectedText">All</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </button>
+                        <div class="dropdown-menu" id="urgencyDropdown">
+                            <div class="dropdown-header">
+                                <button type="button" class="select-all-btn" id="urgencySelectAll">Select All</button>
+                                <button type="button" class="deselect-all-btn" id="urgencyDeselectAll">Deselect All</button>
+                            </div>
+                            <div class="dropdown-checkboxes" id="urgencyCheckboxes"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="jump-to-ticket">
+                    <label for="ticketNumberInput">Go to:</label>
+                    <input type="number" id="ticketNumberInput" min="1" placeholder="#" />
+                    <button id="goToTicketBtn">Go</button>
+                </div>
+                <div class="ticket-counter" id="ticketCounter">-</div>
+            </div>
+            <div class="header-row">
+                <div class="filter-group">
+                    <label>Ticket ID:</label>
+                    <input type="text" id="ticketIdSearch" placeholder="Search by ticket ID..." />
+                </div>
+                <div class="filter-group">
+                    <label>Platform:</label>
+                    <div class="dropdown-container">
+                        <button type="button" class="dropdown-toggle" id="platformDropdownToggle">
+                            <span id="platformSelectedText">All</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </button>
+                        <div class="dropdown-menu" id="platformDropdown">
+                            <div class="dropdown-header">
+                                <button type="button" class="select-all-btn" id="platformSelectAll">Select All</button>
+                                <button type="button" class="deselect-all-btn" id="platformDeselectAll">Deselect All</button>
+                            </div>
+                            <div class="dropdown-checkboxes" id="platformCheckboxes"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Integration:</label>
+                    <div class="dropdown-container">
+                        <button type="button" class="dropdown-toggle" id="integrationDropdownToggle">
+                            <span id="integrationSelectedText">All</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </button>
+                        <div class="dropdown-menu" id="integrationDropdown">
+                            <div class="dropdown-header">
+                                <button type="button" class="select-all-btn" id="integrationSelectAll">Select All</button>
+                                <button type="button" class="deselect-all-btn" id="integrationDeselectAll">Deselect All</button>
+                            </div>
+                            <div class="dropdown-checkboxes" id="integrationCheckboxes"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Recurrent:</label>
+                    <select id="recurrentFilter">
+                        <option value="all">All</option>
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Agent Needed:</label>
+                    <select id="agentNeededFilter">
+                        <option value="all">All</option>
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                    </select>
+                </div>
+                <button id="resetFiltersBtn" class="reset-btn">Reset Filters</button>
+            </div>
+        </div>
+
+        <div class="ticket-card">
+            <div class="ticket-header">
+                <div class="header-item">
+                    <h2>Subject</h2>
+                    <div id="subject" class="subject-text">-</div>
+                </div>
+                <div class="header-item">
+                    <h2>Summary</h2>
+                    <div id="headerSummary" class="subject-text">-</div>
+                </div>
+                <div class="header-item">
+                    <h2>Ticket</h2>
+                    <a id="ticketUrl" href="#" target="_blank" class="ticket-btn">VEZI Ticket</a>
+                </div>
+            </div>
+
+            <div class="navigation">
+                <div class="nav-button-container">
+                    <button id="prevBtn" class="nav-btn" title="Previous (Ctrl+←)">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </button>
+                    <div class="nav-shortcut">
+                        <span>CTRL</span>
+                        <span>+</span>
+                        <span>←</span>
+                    </div>
+                </div>
+
+                <div class="conversation-container">
+                    <div id="conversation" class="conversation">
+                        <p class="placeholder">Se încarcă ticketele...</p>
+                    </div>
+                </div>
+
+                <div class="nav-button-container">
+                    <button id="nextBtn" class="nav-btn" title="Next (Ctrl+→)">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+                    <div class="nav-shortcut">
+                        <span>CTRL</span>
+                        <span>+</span>
+                        <span>→</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="comments-section">
+                <div class="comments-header">
+                    <h3>Comments</h3>
+                    <span id="saveStatus" class="save-status"></span>
+                </div>
+                <textarea
+                    id="commentsTextarea"
+                    class="comments-textarea"
+                    placeholder="Adaugă comentarii aici... (se salvează automat)"
+                ></textarea>
+            </div>
+
+            <div class="metadata">
+                <div class="metadata-item">
+                    <span class="label">tip</span>
+                    <span id="tip" class="value">-</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="label">area</span>
+                    <span id="area" class="value">-</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="label">sentiment</span>
+                    <span id="sentiment" class="value">-</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="label">apreciere_parere_support</span>
+                    <span id="apreciere" class="value">-</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="label">urgency</span>
+                    <span id="urgency" class="value">-</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="label">is_recurrent</span>
+                    <span id="is_recurrent" class="value">-</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="label">agent_intervention_needed</span>
+                    <span id="agent_intervention_needed" class="value">-</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="label">user_goal</span>
+                    <span id="user_goal" class="value">-</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="label">pain_point</span>
+                    <span id="pain_point" class="value">-</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="label">problem_type</span>
+                    <span id="problem_type" class="value">-</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="label">affects_business_flow</span>
+                    <span id="affects_business_flow" class="value">-</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="label">platform</span>
+                    <span id="platform" class="value">-</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="label">integration</span>
+                    <span id="integration" class="value">-</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="label">mentioned_features</span>
+                    <span id="mentioned_features" class="value">-</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="label">specific_error_messages</span>
+                    <span id="specific_error_messages" class="value">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
