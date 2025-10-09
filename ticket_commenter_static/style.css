@@ -34,10 +34,41 @@ body {
 }
 
 .header-row {
+    display: grid;
+    grid-template-columns: 200px 1fr 1fr;
+    gap: 16px;
+    align-items: start;
+}
+
+.header-row-secondary {
     display: flex;
     align-items: center;
     gap: 8px;
     flex-wrap: wrap;
+}
+
+.filter-col {
+    display: flex;
+    gap: 8px;
+}
+
+.filter-col-search {
+    /* Column 1: Search - vertical */
+    flex-direction: column;
+}
+
+.filter-col-main {
+    /* Column 2: Main categories - horizontal */
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.filter-col-attributes {
+    /* Column 3: Attributes - horizontal */
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .filter-group {
@@ -66,7 +97,8 @@ body {
 }
 
 .filter-group input[type="text"] {
-    min-width: 150px;
+    min-width: 120px;
+    width: 100%;
 }
 
 .filter-group select:focus,
@@ -87,7 +119,8 @@ body {
     background: white;
     color: #333;
     cursor: pointer;
-    min-width: 150px;
+    min-width: 120px;
+    max-width: 180px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -264,7 +297,10 @@ body {
     font-size: 11px;
     color: #666;
     font-weight: 500;
+    text-align: right;
+    padding: 3px 6px;
     margin-left: auto;
+    white-space: nowrap;
 }
 
 .ticket-card {

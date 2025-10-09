@@ -11,116 +11,124 @@
     <div class="container">
         <div class="header">
             <div class="header-row">
-                <div class="filter-group">
-                    <label>Mailbox:</label>
-                    <div class="dropdown-container">
-                        <button type="button" class="dropdown-toggle" id="mailboxDropdownToggle">
-                            <span id="mailboxSelectedText">All</span>
-                            <span class="dropdown-arrow">▼</span>
-                        </button>
-                        <div class="dropdown-menu" id="mailboxDropdown">
-                            <div class="dropdown-header">
-                                <button type="button" class="select-all-btn" id="mailboxSelectAll">Select All</button>
-                                <button type="button" class="deselect-all-btn" id="mailboxDeselectAll">Deselect All</button>
+                <!-- Column 1: Search -->
+                <div class="filter-col filter-col-search">
+                    <div class="filter-group">
+                        <label>Ticket ID:</label>
+                        <input type="text" id="ticketIdSearch" placeholder="Search by ticket ID..." />
+                    </div>
+                </div>
+
+                <!-- Column 2: Main Categories -->
+                <div class="filter-col filter-col-main">
+                    <div class="filter-group">
+                        <label>Platform:</label>
+                        <div class="dropdown-container">
+                            <button type="button" class="dropdown-toggle" id="platformDropdownToggle">
+                                <span id="platformSelectedText">All</span>
+                                <span class="dropdown-arrow">▼</span>
+                            </button>
+                            <div class="dropdown-menu" id="platformDropdown">
+                                <div class="dropdown-header">
+                                    <button type="button" class="select-all-btn" id="platformSelectAll">Select All</button>
+                                    <button type="button" class="deselect-all-btn" id="platformDeselectAll">Deselect All</button>
+                                </div>
+                                <div class="dropdown-checkboxes" id="platformCheckboxes"></div>
                             </div>
-                            <div class="dropdown-checkboxes" id="mailboxCheckboxes">
-                                <!-- Checkboxes will be populated dynamically -->
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label>Area:</label>
+                        <div class="dropdown-container">
+                            <button type="button" class="dropdown-toggle" id="areaDropdownToggle">
+                                <span id="areaSelectedText">All</span>
+                                <span class="dropdown-arrow">▼</span>
+                            </button>
+                            <div class="dropdown-menu" id="areaDropdown">
+                                <div class="dropdown-header">
+                                    <button type="button" class="select-all-btn" id="areaSelectAll">Select All</button>
+                                    <button type="button" class="deselect-all-btn" id="areaDeselectAll">Deselect All</button>
+                                </div>
+                                <div class="dropdown-checkboxes" id="areaCheckboxes"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label>Tip:</label>
+                        <div class="dropdown-container">
+                            <button type="button" class="dropdown-toggle" id="tipDropdownToggle">
+                                <span id="tipSelectedText">All</span>
+                                <span class="dropdown-arrow">▼</span>
+                            </button>
+                            <div class="dropdown-menu" id="tipDropdown">
+                                <div class="dropdown-header">
+                                    <button type="button" class="select-all-btn" id="tipSelectAll">Select All</button>
+                                    <button type="button" class="deselect-all-btn" id="tipDeselectAll">Deselect All</button>
+                                </div>
+                                <div class="dropdown-checkboxes" id="tipCheckboxes"></div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="filter-group">
-                    <label>Tip:</label>
-                    <div class="dropdown-container">
-                        <button type="button" class="dropdown-toggle" id="tipDropdownToggle">
-                            <span id="tipSelectedText">All</span>
-                            <span class="dropdown-arrow">▼</span>
-                        </button>
-                        <div class="dropdown-menu" id="tipDropdown">
-                            <div class="dropdown-header">
-                                <button type="button" class="select-all-btn" id="tipSelectAll">Select All</button>
-                                <button type="button" class="deselect-all-btn" id="tipDeselectAll">Deselect All</button>
+
+                <!-- Column 3: Attributes -->
+                <div class="filter-col filter-col-attributes">
+                    <div class="filter-group">
+                        <label>Sentiment:</label>
+                        <div class="dropdown-container">
+                            <button type="button" class="dropdown-toggle" id="sentimentDropdownToggle">
+                                <span id="sentimentSelectedText">All</span>
+                                <span class="dropdown-arrow">▼</span>
+                            </button>
+                            <div class="dropdown-menu" id="sentimentDropdown">
+                                <div class="dropdown-header">
+                                    <button type="button" class="select-all-btn" id="sentimentSelectAll">Select All</button>
+                                    <button type="button" class="deselect-all-btn" id="sentimentDeselectAll">Deselect All</button>
+                                </div>
+                                <div class="dropdown-checkboxes" id="sentimentCheckboxes"></div>
                             </div>
-                            <div class="dropdown-checkboxes" id="tipCheckboxes"></div>
                         </div>
                     </div>
-                </div>
-                <div class="filter-group">
-                    <label>Area:</label>
-                    <div class="dropdown-container">
-                        <button type="button" class="dropdown-toggle" id="areaDropdownToggle">
-                            <span id="areaSelectedText">All</span>
-                            <span class="dropdown-arrow">▼</span>
-                        </button>
-                        <div class="dropdown-menu" id="areaDropdown">
-                            <div class="dropdown-header">
-                                <button type="button" class="select-all-btn" id="areaSelectAll">Select All</button>
-                                <button type="button" class="deselect-all-btn" id="areaDeselectAll">Deselect All</button>
+                    <div class="filter-group">
+                        <label>Urgency:</label>
+                        <div class="dropdown-container">
+                            <button type="button" class="dropdown-toggle" id="urgencyDropdownToggle">
+                                <span id="urgencySelectedText">All</span>
+                                <span class="dropdown-arrow">▼</span>
+                            </button>
+                            <div class="dropdown-menu" id="urgencyDropdown">
+                                <div class="dropdown-header">
+                                    <button type="button" class="select-all-btn" id="urgencySelectAll">Select All</button>
+                                    <button type="button" class="deselect-all-btn" id="urgencyDeselectAll">Deselect All</button>
+                                </div>
+                                <div class="dropdown-checkboxes" id="urgencyCheckboxes"></div>
                             </div>
-                            <div class="dropdown-checkboxes" id="areaCheckboxes"></div>
                         </div>
                     </div>
-                </div>
-                <div class="filter-group">
-                    <label>Sentiment:</label>
-                    <div class="dropdown-container">
-                        <button type="button" class="dropdown-toggle" id="sentimentDropdownToggle">
-                            <span id="sentimentSelectedText">All</span>
-                            <span class="dropdown-arrow">▼</span>
-                        </button>
-                        <div class="dropdown-menu" id="sentimentDropdown">
-                            <div class="dropdown-header">
-                                <button type="button" class="select-all-btn" id="sentimentSelectAll">Select All</button>
-                                <button type="button" class="deselect-all-btn" id="sentimentDeselectAll">Deselect All</button>
+                    <div class="filter-group">
+                        <label>Mailbox:</label>
+                        <div class="dropdown-container">
+                            <button type="button" class="dropdown-toggle" id="mailboxDropdownToggle">
+                                <span id="mailboxSelectedText">All</span>
+                                <span class="dropdown-arrow">▼</span>
+                            </button>
+                            <div class="dropdown-menu" id="mailboxDropdown">
+                                <div class="dropdown-header">
+                                    <button type="button" class="select-all-btn" id="mailboxSelectAll">Select All</button>
+                                    <button type="button" class="deselect-all-btn" id="mailboxDeselectAll">Deselect All</button>
+                                </div>
+                                <div class="dropdown-checkboxes" id="mailboxCheckboxes">
+                                    <!-- Checkboxes will be populated dynamically -->
+                                </div>
                             </div>
-                            <div class="dropdown-checkboxes" id="sentimentCheckboxes"></div>
                         </div>
                     </div>
+                    <div class="ticket-counter" id="ticketCounter">-</div>
                 </div>
-                <div class="filter-group">
-                    <label>Urgency:</label>
-                    <div class="dropdown-container">
-                        <button type="button" class="dropdown-toggle" id="urgencyDropdownToggle">
-                            <span id="urgencySelectedText">All</span>
-                            <span class="dropdown-arrow">▼</span>
-                        </button>
-                        <div class="dropdown-menu" id="urgencyDropdown">
-                            <div class="dropdown-header">
-                                <button type="button" class="select-all-btn" id="urgencySelectAll">Select All</button>
-                                <button type="button" class="deselect-all-btn" id="urgencyDeselectAll">Deselect All</button>
-                            </div>
-                            <div class="dropdown-checkboxes" id="urgencyCheckboxes"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="jump-to-ticket">
-                    <label for="ticketNumberInput">Go to:</label>
-                    <input type="number" id="ticketNumberInput" min="1" placeholder="#" />
-                    <button id="goToTicketBtn">Go</button>
-                </div>
-                <div class="ticket-counter" id="ticketCounter">-</div>
             </div>
-            <div class="header-row">
-                <div class="filter-group">
-                    <label>Ticket ID:</label>
-                    <input type="text" id="ticketIdSearch" placeholder="Search by ticket ID..." />
-                </div>
-                <div class="filter-group">
-                    <label>Platform:</label>
-                    <div class="dropdown-container">
-                        <button type="button" class="dropdown-toggle" id="platformDropdownToggle">
-                            <span id="platformSelectedText">All</span>
-                            <span class="dropdown-arrow">▼</span>
-                        </button>
-                        <div class="dropdown-menu" id="platformDropdown">
-                            <div class="dropdown-header">
-                                <button type="button" class="select-all-btn" id="platformSelectAll">Select All</button>
-                                <button type="button" class="deselect-all-btn" id="platformDeselectAll">Deselect All</button>
-                            </div>
-                            <div class="dropdown-checkboxes" id="platformCheckboxes"></div>
-                        </div>
-                    </div>
-                </div>
+
+            <!-- Row 2: Secondary Filters -->
+            <div class="header-row header-row-secondary">
                 <div class="filter-group">
                     <label>Integration:</label>
                     <div class="dropdown-container">
@@ -152,6 +160,11 @@
                         <option value="true">True</option>
                         <option value="false">False</option>
                     </select>
+                </div>
+                <div class="jump-to-ticket">
+                    <label for="ticketNumberInput">Go to:</label>
+                    <input type="number" id="ticketNumberInput" min="1" placeholder="#" />
+                    <button id="goToTicketBtn">Go</button>
                 </div>
                 <button id="resetFiltersBtn" class="reset-btn">Reset Filters</button>
             </div>
