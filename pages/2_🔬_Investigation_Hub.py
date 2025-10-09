@@ -38,11 +38,12 @@ def initialize_filters(df):
     if 'investigation_filters' not in st.session_state:
         st.session_state.investigation_filters = {
             'date_range': None,
-            'areas': [],
+            'platform': [],
             'tip': [],
+            'areas': [],
+            'sentiment': [],
             'urgency': [],
             'problem_type': [],
-            'platform': [],
             'affects_business': None
         }
 
@@ -59,20 +60,23 @@ def apply_filters(df, filters):
         ]
 
     # Multi-select filters
-    if filters['areas'] and 'area' in filtered_df.columns:
-        filtered_df = filtered_df[filtered_df['area'].isin(filters['areas'])]
+    if filters['platform'] and 'platform' in filtered_df.columns:
+        filtered_df = filtered_df[filtered_df['platform'].isin(filters['platform'])]
 
     if filters['tip'] and 'tip' in filtered_df.columns:
         filtered_df = filtered_df[filtered_df['tip'].isin(filters['tip'])]
+
+    if filters['areas'] and 'area' in filtered_df.columns:
+        filtered_df = filtered_df[filtered_df['area'].isin(filters['areas'])]
+
+    if filters['sentiment'] and 'sentiment' in filtered_df.columns:
+        filtered_df = filtered_df[filtered_df['sentiment'].isin(filters['sentiment'])]
 
     if filters['urgency'] and 'urgency' in filtered_df.columns:
         filtered_df = filtered_df[filtered_df['urgency'].isin(filters['urgency'])]
 
     if filters['problem_type'] and 'problem_type' in filtered_df.columns:
         filtered_df = filtered_df[filtered_df['problem_type'].isin(filters['problem_type'])]
-
-    if filters['platform'] and 'platform' in filtered_df.columns:
-        filtered_df = filtered_df[filtered_df['platform'].isin(filters['platform'])]
 
     # Boolean filter
     if filters['affects_business'] is not None and 'affects_business_flow' in filtered_df.columns:
@@ -155,6 +159,16 @@ def main():
             )
             st.session_state.investigation_filters['platform'] = selected_platforms
 
+        # Tip
+        if 'tip' in df_original.columns:
+            tips = sorted(df_original['tip'].dropna().unique().tolist())
+            selected_tips = st.multiselect(
+                "📝 Tip",
+                options=tips,
+                key="inv_tip"
+            )
+            st.session_state.investigation_filters['tip'] = selected_tips
+
         # Area
         if 'area' in df_original.columns:
             areas = sorted(df_original['area'].dropna().unique().tolist())
@@ -164,6 +178,16 @@ def main():
                 key="inv_area"
             )
             st.session_state.investigation_filters['areas'] = selected_areas
+
+        # Sentiment
+        if 'sentiment' in df_original.columns:
+            sentiments = sorted(df_original['sentiment'].dropna().unique().tolist())
+            selected_sentiments = st.multiselect(
+                "😊 Sentiment",
+                options=sentiments,
+                key="inv_sentiment"
+            )
+            st.session_state.investigation_filters['sentiment'] = selected_sentiments
 
         # Urgency
         if 'urgency' in df_original.columns:
@@ -199,11 +223,12 @@ def main():
         if st.button("🔄 Clear All Filters"):
             st.session_state.investigation_filters = {
                 'date_range': None,
-                'areas': [],
+                'platform': [],
                 'tip': [],
+                'areas': [],
+                'sentiment': [],
                 'urgency': [],
                 'problem_type': [],
-                'platform': [],
                 'affects_business': None
             }
             st.rerun()
