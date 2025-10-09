@@ -1,6 +1,6 @@
 """
 DASHBOARD - Executive Overview
-Consolidates Health Check, Business Impact, and PM Insights executive views
+Consolidates Health Check and Executive Summary views with comprehensive support metrics
 """
 
 import streamlit as st
@@ -424,9 +424,8 @@ def main():
     st.markdown("---")
 
     # Tabbed interface
-    tab1, tab2, tab3 = st.tabs([
+    tab1, tab2 = st.tabs([
         "❤️ Health Check",
-        "💼 Business Impact",
         "📊 Executive Summary"
     ])
 
@@ -551,10 +550,10 @@ def main():
                 negative = len(df[df['sentiment'].str.lower() == 'negativ'])
                 st.metric("😟 Negative", negative)
 
-    with tab2:
-        st.markdown("### 💼 Business Impact Analysis")
+        # Business Impact Components moved from former tab2
+        st.markdown("---")
 
-        # Component 1: Business Flow Impact Gauge
+        # Component: Business Flow Impact Gauge
         st.markdown("#### 💥 Business Flow Impact")
 
         if 'affects_business_flow' in df.columns:
@@ -591,7 +590,7 @@ def main():
 
         st.markdown("---")
 
-        # Component 2: Recurring Issues
+        # Component: Recurring Issues
         st.markdown("#### 🔄 Recurring Issues")
 
         if 'is_recurrent' in df.columns:
@@ -644,7 +643,7 @@ def main():
 
         st.markdown("---")
 
-        # Component 3: Platform Distribution
+        # Component: Platform Distribution
         st.markdown("#### 🏢 Problem Distribution by Platform")
 
         if 'platform' in df.columns:
@@ -690,7 +689,7 @@ def main():
 
         st.markdown("---")
 
-        # Component 4: Most Critical Open Issues
+        # Component: Most Critical Open Issues
         st.markdown("#### 🚨 Most Critical Open Issues")
 
         if 'urgency' in df.columns and 'affects_business_flow' in df.columns:
@@ -750,7 +749,7 @@ def main():
         else:
             st.warning("Columns 'urgency' or 'affects_business_flow' not found")
 
-    with tab3:
+    with tab2:
         st.markdown("### 📊 Executive Summary")
         st.markdown("*High-level metrics and trends for executive decision-making*")
 
