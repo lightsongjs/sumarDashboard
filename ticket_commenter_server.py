@@ -11,6 +11,9 @@ CORS(app)
 
 CSV_FILE = 'tickets.csv'
 
+# Global cache for filter options (loaded at startup)
+FILTER_OPTIONS_CACHE = {}
+
 def read_tickets():
     """Citește toate ticketele din CSV"""
     tickets = []
@@ -35,6 +38,28 @@ def write_tickets(tickets):
         writer.writeheader()
         writer.writerows(tickets)
 
+def load_filter_options():
+    """Încarcă opțiunile de filtrare din CSV la startup (cache)"""
+    tickets = read_tickets()
+
+    # Coloanele care sunt folosite ca filtre
+    filter_columns = ['mailbox_name', 'tip', 'area', 'sentiment', 'urgency', 'platform', 'integration']
+
+    filter_options = {}
+
+    for column in filter_columns:
+        values = set()
+        for ticket in tickets:
+            value = ticket.get(column, '')
+            # Include doar valori non-empty și diferite de '-'
+            if value and value.strip() and value.strip() != '-':
+                values.add(value.strip())
+
+        # Convertește la listă sortată
+        filter_options[column] = sorted(list(values))
+
+    return filter_options
+
 @app.route('/')
 def index():
     """Servește pagina principală"""
@@ -50,6 +75,11 @@ def get_tickets():
     """API: Returnează toate ticketele"""
     tickets = read_tickets()
     return jsonify(tickets)
+
+@app.route('/api/filter-options', methods=['GET'])
+def get_filter_options():
+    """API: Returnează opțiunile unice pentru fiecare filtru din cache"""
+    return jsonify(FILTER_OPTIONS_CACHE)
 
 @app.route('/api/tickets/<int:index>/comment', methods=['POST'])
 def update_comment(index):
@@ -71,5 +101,8 @@ def update_comment(index):
     return jsonify({'success': True, 'comment': comment})
 
 if __name__ == '__main__':
+    print("Loading filter options into cache...")
+    FILTER_OPTIONS_CACHE = load_filter_options()
+    print(f"Cached {len(FILTER_OPTIONS_CACHE)} filter columns")
     print("Starting server on http://localhost:5000")
     app.run(debug=True, port=5000)

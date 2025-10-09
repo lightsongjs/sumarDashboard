@@ -4,6 +4,7 @@ let filteredTickets = [];
 let currentTicketIndex = 0;
 let saveTimeout = null;
 let isSaving = false;
+let filterOptions = {}; // Store filter options from API
 
 // API Configuration
 const API_BASE = '';
@@ -157,8 +158,26 @@ window.addEventListener('load', () => {
     loadTickets();
 });
 
+async function loadFilterOptions() {
+    try {
+        const response = await fetch(`${API_BASE}/api/filter-options`);
+        if (!response.ok) {
+            throw new Error('Failed to load filter options');
+        }
+
+        filterOptions = await response.json();
+        console.log('Loaded filter options from API:', filterOptions);
+    } catch (error) {
+        console.error('Error loading filter options:', error);
+        filterOptions = {}; // Fallback to empty options
+    }
+}
+
 async function loadTickets() {
     try {
+        // First, load filter options from API
+        await loadFilterOptions();
+
         const response = await fetch(`${API_BASE}/api/tickets`);
         if (!response.ok) {
             throw new Error('Failed to load tickets');
@@ -280,18 +299,13 @@ function populateFilters() {
 
 function populateDropdownCheckboxes(filterKey) {
     const filter = dropdownFilters[filterKey];
-    const values = new Set();
 
-    tickets.forEach(ticket => {
-        const value = ticket[filter.fieldName];
-        if (value && value !== '-' && value.trim() !== '') {
-            values.add(value);
-        }
-    });
+    // Get values from API filter options instead of extracting from tickets
+    const values = filterOptions[filter.fieldName] || [];
 
     filter.checkboxesContainer.innerHTML = '';
 
-    Array.from(values).sort().forEach((value, index) => {
+    values.forEach((value, index) => {
         const checkboxItem = document.createElement('div');
         checkboxItem.className = 'checkbox-item';
 
@@ -396,15 +410,32 @@ function restoreFilterState() {
             agentNeededFilter.value = filterState.agentNeeded || 'all';
             ticketIdSearch.value = filterState.ticketId || '';
 
-            // Restore dropdown filters
+            // Restore dropdown filters with validation
             if (filterState.dropdownFilters) {
                 Object.keys(dropdownFilters).forEach(filterKey => {
                     const savedSelected = filterState.dropdownFilters[filterKey];
                     if (savedSelected && Array.isArray(savedSelected)) {
                         const filter = dropdownFilters[filterKey];
+
+                        // Get current available values from API
+                        const availableValues = filterOptions[filter.fieldName] || [];
+
+                        // Filter out values that no longer exist in the CSV
+                        const validSavedValues = savedSelected.filter(value =>
+                            availableValues.includes(value)
+                        );
+
+                        // If some values were removed, log it
+                        const removedValues = savedSelected.filter(value =>
+                            !availableValues.includes(value)
+                        );
+                        if (removedValues.length > 0) {
+                            console.log(`Removed obsolete filter values for ${filterKey}:`, removedValues);
+                        }
+
                         const checkboxes = filter.checkboxesContainer.querySelectorAll('input[type="checkbox"]');
                         checkboxes.forEach(checkbox => {
-                            checkbox.checked = savedSelected.includes(checkbox.value);
+                            checkbox.checked = validSavedValues.includes(checkbox.value);
                         });
                         updateSelectedValues(filterKey);
                     }
