@@ -197,6 +197,28 @@ body {
     background: #dee2e6;
 }
 
+.dropdown-search {
+    width: calc(100% - 16px);
+    margin: 4px 8px;
+    padding: 4px 8px;
+    border: 1px solid #e9ecef;
+    border-radius: 3px;
+    font-size: 11px;
+    font-family: inherit;
+    transition: border-color 0.2s;
+}
+
+.dropdown-search:focus {
+    outline: none;
+    border-color: #667eea;
+    background: #f8f9fa;
+}
+
+.dropdown-search::placeholder {
+    color: #999;
+    font-style: italic;
+}
+
 .dropdown-checkboxes {
     padding: 4px 0;
 }

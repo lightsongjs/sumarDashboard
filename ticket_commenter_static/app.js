@@ -108,6 +108,12 @@ Object.keys(dropdownFilters).forEach(filterKey => {
     filter.deselectAllBtn.addEventListener('click', () => deselectAll(filterKey));
 });
 
+// Add search functionality for Area filter only
+const areaSearchInput = document.getElementById('areaSearch');
+if (areaSearchInput) {
+    areaSearchInput.addEventListener('input', (e) => filterAreaCheckboxes(e.target.value));
+}
+
 recurrentFilter.addEventListener('change', applyFilters);
 agentNeededFilter.addEventListener('change', applyFilters);
 ticketIdSearch.addEventListener('input', applyFilters);
@@ -252,10 +258,32 @@ function toggleDropdown(e, filterKey) {
     dropdownFilters[filterKey].dropdown.classList.toggle('show');
 }
 
+function filterAreaCheckboxes(searchQuery) {
+    const areaFilter = dropdownFilters['area'];
+    const checkboxItems = areaFilter.checkboxesContainer.querySelectorAll('.checkbox-item');
+    const query = searchQuery.toLowerCase().trim();
+
+    checkboxItems.forEach(item => {
+        const label = item.querySelector('label');
+        const text = label.textContent.toLowerCase();
+
+        if (query === '' || text.includes(query)) {
+            item.style.display = 'flex';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
 function selectAll(filterKey) {
     const filter = dropdownFilters[filterKey];
-    const checkboxes = filter.checkboxesContainer.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach(checkbox => {
+    const checkboxItems = filter.checkboxesContainer.querySelectorAll('.checkbox-item');
+    checkboxItems.forEach(item => {
+        // For Area filter with search, only select visible items
+        if (filterKey === 'area' && item.style.display === 'none') {
+            return;
+        }
+        const checkbox = item.querySelector('input[type="checkbox"]');
         checkbox.checked = true;
     });
     updateSelectedValues(filterKey);
@@ -263,8 +291,13 @@ function selectAll(filterKey) {
 
 function deselectAll(filterKey) {
     const filter = dropdownFilters[filterKey];
-    const checkboxes = filter.checkboxesContainer.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach(checkbox => {
+    const checkboxItems = filter.checkboxesContainer.querySelectorAll('.checkbox-item');
+    checkboxItems.forEach(item => {
+        // For Area filter with search, only deselect visible items
+        if (filterKey === 'area' && item.style.display === 'none') {
+            return;
+        }
+        const checkbox = item.querySelector('input[type="checkbox"]');
         checkbox.checked = false;
     });
     updateSelectedValues(filterKey);
