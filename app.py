@@ -273,10 +273,7 @@ def main():
                     st.dataframe(missing_df, use_container_width=True)
 
         st.markdown("---")
-
-        # Auto-redirect to Strategic Dashboard
-        st.success("✅ Date încărcate cu succes! Redirectionare către Strategic Dashboard...")
-        st.switch_page("pages/1_📊_Strategic_Dashboard.py")
+        st.success("✅ Date încărcate cu succes! Acum poți naviga la orice pagină folosind sidebar-ul.")
 
     else:
         # No data loaded - show welcome screen
