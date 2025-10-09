@@ -20,7 +20,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 uv venv
 
 # Instalează dependențe
-uv pip install streamlit pandas plotly openpyxl xlsxwriter chardet
+uv pip install -r requirements.txt
 ```
 
 ### 2. Rulare
@@ -55,49 +55,57 @@ Deschide browser la: **http://localhost:8501**
 │   ├── charts.py               # Grafice Plotly
 │   ├── filters.py              # Filtre sidebar
 │   └── export.py               # Export rapoarte
-└── 📁 pages/                   # Pagini aplicație
-    ├── 1_📊_Dashboard.py       # KPIs + vizualizări
-    ├── 2_🔥_Pain_Points.py     # Analiza probleme
-    ├── 3_📈_Analytics.py       # Analytics avansate
-    ├── 4_👥_Team.py            # Performance echipă
-    └── 5_📤_Reports.py         # Generare rapoarte
+├── 📁 pages/                   # Pagini aplicație (v3.0)
+│   ├── 1_📊_Strategic_Dashboard.py  # Dashboard principal cu KPIs
+│   ├── 2_🔬_Investigation_Hub.py    # Analiza probleme + insights
+│   ├── 3_👥_Team_Performance.py     # Performance echipă
+│   ├── 4_📤_Export_Reports.py       # Generare rapoarte
+│   └── 5_📝_Ticket_Reviewer.py      # Review individual tickets
+├── 📁 ticket_commenter_static/      # Flask app pentru ticket reviewer
+│   ├── app.js                       # Frontend logic
+│   ├── index.html                   # Ticket reviewer UI
+│   └── style.css                    # Styles
+└── 📄 ticket_commenter_server.py    # Flask backend server
 ```
 
 ---
 
-## ✨ Features
+## ✨ Features (v3.0)
 
-### 📊 Dashboard Principal
-- 4 KPIs cu delta vs perioadă anterioară
-- 6+ grafice interactive (Plotly)
-- Filtrare avansată în sidebar
-- Quick filters (Blockers, Recurente, etc.)
+### 📊 Strategic Dashboard
+- Consolidated KPIs with delta metrics
+- Interactive Plotly visualizations
+- Advanced sidebar filtering
+- Quick filters (Blockers, Recurrent, etc.)
+- Pain points matrix and word cloud
+- Timeline analysis
 
-### 🔥 Pain Points Analysis
-- Top 10 probleme frecvente
+### 🔬 Investigation Hub
+- Top pain points analysis
 - Word frequency analysis
-- Matrix Arii × Tipuri probleme
-- Tree view expandabil
-- Export dedicat
-
-### 📈 Analytics Avansate
-- Pareto analysis (80/20)
-- Forecast linear 7-14 zile
-- Period comparison
-- AI insights automate
-- Statistical summaries
+- Drill-down capabilities
+- Pattern detection
+- Export insights
 
 ### 👥 Team Performance
-- Leaderboard agenți
-- Metrici de performanță
-- Comparație între agenți
+- Agent leaderboard
+- Performance metrics
+- Agent comparison
 - Activity timeline
 
-### 📤 Reports & Export
-- Export CSV/Excel
-- Raport Excel complet (multiple sheets)
-- Rapoarte personalizate
-- Quick exports (Blockers, Negative, etc.)
+### 📤 Export Reports
+- Multi-format export (CSV, Excel, PDF, PowerPoint)
+- Customizable reports
+- Quick export templates
+- Automated report generation
+
+### 📝 Ticket Reviewer (NEW!)
+- Browse tickets one-by-one with keyboard navigation
+- Multi-filter support (mailbox, area, sentiment, urgency, platform, etc.)
+- Inline comments with auto-save
+- Full conversation view (agent + client)
+- Jump to specific ticket number
+- Opens in separate tab for focused review
 
 ---
 
@@ -135,20 +143,61 @@ Vezi `.claude/claude.md` pentru lista completă.
 
 ## 🛠️ Tech Stack
 
+### Core Framework
 - **Python** 3.12
-- **Streamlit** 1.50
-- **Pandas** 2.3.3
-- **Plotly** 6.3.1
-- **OpenPyXL** 3.1.5
+- **Streamlit** 1.40+ (Dashboard framework)
+- **Flask** 3.1+ (Ticket Reviewer backend)
+
+### Data & Visualization
+- **Pandas** 2.2+
+- **Plotly** 5.24+
+- **Matplotlib** 3.9+
+- **Seaborn** 0.13+
+
+### Export & Reporting
+- **OpenPyXL** 3.1+
+- **XlsxWriter** 3.2+
+- **ReportLab** 4.2+
+- **FPDF2** 2.8+
+
+### Additional
+- **Flask-CORS** (for Ticket Reviewer API)
+- **python-dotenv** 1.0+
+- **chardet** 5.2+ (encoding detection)
 
 ---
 
 ## 📝 Utilizare
 
+### Dashboard Principal
+
 1. **Homepage:** Click "📂 Folosește tickets.csv local"
 2. **Navigare:** Sidebar → selectează pagina
 3. **Filtrare:** Sidebar → aplică filtre
 4. **Export:** Reports → alege format
+
+### Ticket Reviewer
+
+1. **Start Flask server:**
+   ```bash
+   cd sumarDashboard
+   python ticket_commenter_server.py
+   ```
+
+2. **Access from dashboard:** Click "📝 Ticket Reviewer" in sidebar (opens in new tab)
+
+3. **Or direct access:** http://localhost:5000
+
+4. **Navigation:**
+   - Use **Ctrl + ←/→** for keyboard navigation
+   - Click Previous/Next buttons
+   - Jump to specific ticket number
+   - Apply filters in header
+
+5. **Comments:**
+   - Type in comments textarea
+   - Auto-saves after 500ms
+   - Persists to CSV "Comments" column
 
 ---
 
