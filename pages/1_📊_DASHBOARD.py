@@ -1,5 +1,5 @@
 """
-Strategic Dashboard - Executive Overview
+DASHBOARD - Executive Overview
 Consolidates Health Check, Business Impact, and PM Insights executive views
 """
 
@@ -14,8 +14,9 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 
 from utils.charts import COLORS, DARK_TEMPLATE, AXIS_STYLE
+from utils.data_processor import auto_load_default_csv
 
-st.set_page_config(page_title="Strategic Dashboard", page_icon="📊", layout="wide")
+st.set_page_config(page_title="DASHBOARD", page_icon="📊", layout="wide")
 
 
 # ========================================
@@ -389,6 +390,9 @@ def get_critical_open_issues(df):
 # ========================================
 
 def main():
+    # Auto-load CSV if available
+    auto_load_default_csv()
+
     # Check if data is loaded
     if not st.session_state.get('data_loaded') or st.session_state.get('df_original') is None:
         st.warning("⚠️ Nu există date încărcate.")
@@ -399,7 +403,7 @@ def main():
     df = st.session_state.df_original.copy()
 
     # Page header
-    st.title("📊 Strategic Dashboard")
+    st.title("📊 DASHBOARD")
     st.markdown("*Executive overview and high-level metrics for leadership*")
 
     # Global date range filter

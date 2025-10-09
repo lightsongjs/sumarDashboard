@@ -13,7 +13,7 @@ from pathlib import Path
 # Add utils to path
 sys.path.append(str(Path(__file__).parent.parent))
 
-from utils.data_processor import CSVProcessor
+from utils.data_processor import CSVProcessor, auto_load_default_csv
 from utils.filters import render_sidebar_filters
 
 # Page configuration
@@ -149,6 +149,9 @@ def create_aggrid_table(df):
 def main():
     """Main application function"""
 
+    # Auto-load CSV if available
+    auto_load_default_csv()
+
     st.title("📋 Raw Data - Date Complete")
     st.markdown("### Tabel interactiv cu toate datele - filtrare, sortare, export")
 
@@ -168,7 +171,7 @@ def main():
     filter_params = render_sidebar_filters(df_original)
 
     # Apply filters
-    df_filtered = CSVProcessor.apply_filters(df_original, filter_params)
+    df_filtered = CSVProcessor.apply_filters(df_original, **filter_params)
 
     # Quick stats
     st.markdown("---")

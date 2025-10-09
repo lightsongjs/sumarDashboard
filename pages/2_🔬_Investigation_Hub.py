@@ -14,6 +14,7 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 
 from utils.charts import COLORS, DARK_TEMPLATE, AXIS_STYLE
+from utils.data_processor import auto_load_default_csv
 
 st.set_page_config(page_title="Investigation Hub", page_icon="🔬", layout="wide")
 
@@ -103,6 +104,9 @@ def create_sunburst_chart(df):
 # ========================================
 
 def main():
+    # Auto-load CSV if available
+    auto_load_default_csv()
+
     # Check if data is loaded
     if not st.session_state.get('data_loaded') or st.session_state.get('df_original') is None:
         st.warning("⚠️ Nu există date încărcate.")

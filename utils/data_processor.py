@@ -252,10 +252,15 @@ class CSVProcessor:
 
         # Date range filter
         if date_range and 'created_at' in filtered_df.columns:
-            start_date, end_date = date_range
-            # Make timestamps timezone-aware if the column has timezone info
-            start_ts = pd.Timestamp(start_date)
-            end_ts = pd.Timestamp(end_date)
+            # Validate date_range is a proper 2-tuple
+            if not isinstance(date_range, tuple) or len(date_range) != 2:
+                # Skip invalid date range
+                pass
+            else:
+                start_date, end_date = date_range
+                # Make timestamps timezone-aware if the column has timezone info
+                start_ts = pd.Timestamp(start_date)
+                end_ts = pd.Timestamp(end_date)
             if filtered_df['created_at'].dt.tz is not None:
                 start_ts = start_ts.tz_localize('UTC')
                 end_ts = end_ts.tz_localize('UTC')
@@ -336,3 +341,37 @@ class CSVProcessor:
 
         df = pd.DataFrame(data)
         return CSVProcessor.process_dataframe(df)
+
+
+def auto_load_default_csv():
+    """
+    Auto-load default CSV file (tickets.csv) if it exists.
+    Loads only once per session - subsequent calls do nothing.
+
+    This function should be called at the beginning of each page's main()
+    to ensure data is available regardless of which page is opened first.
+    """
+    # If data is already loaded, do nothing
+    if st.session_state.get('data_loaded') and st.session_state.get('df_original') is not None:
+        return
+
+    # Check if default CSV exists
+    from pathlib import Path
+    default_csv_path = Path(__file__).parent.parent / "tickets.csv"
+
+    if not default_csv_path.exists():
+        return  # No default CSV, nothing to load
+
+    try:
+        # Load and process the CSV
+        df = CSVProcessor.load_csv(str(default_csv_path))
+        df_processed = CSVProcessor.process_dataframe(df)
+
+        # Store in session state
+        st.session_state.df_original = df_processed
+        st.session_state.data_loaded = True
+        st.session_state.csv_file_path = str(default_csv_path)
+
+    except Exception as e:
+        # Silently fail - pages will show "no data" message
+        pass
